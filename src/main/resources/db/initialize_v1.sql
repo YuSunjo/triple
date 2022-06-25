@@ -1,34 +1,42 @@
 -- 적립 포인트
 create table point
 (
-    id      binary(16)   not null
+    id      varchar(255) not null
         primary key,
-    user_id varchar(255) null
+    created_date      datetime     null,
+    delete_date       datetime     null,
+    updated_date      datetime     null,
+    user_id varchar(255) not null
 );
 
 create index point_user_index
     on point (user_id);
 
-
 -- 리뷰
 create table review
 (
-    id       binary(16)   not null
+    id       varchar(255) not null
         primary key,
+    created_date      datetime     null,
+    delete_date       datetime     null,
+    updated_date      datetime     null,
     content  varchar(255) null,
-    place_id varchar(255) null,
-    title    varchar(255) null
+    place_id varchar(255) not null,
+    title    varchar(255) not null
 );
 
 create index review_place_index
     on review (place_id);
 
--- 리뷰 히스토리 남기기
+-- 리뷰 히스토리의 이미지
 create table history_image
 (
-    id                binary(16) not null
+    id                varchar(255) not null
         primary key,
-    review_history_id binary(16) not null,
+    created_date      datetime     null,
+    delete_date       datetime     null,
+    updated_date      datetime     null,
+    review_history_id varchar(255) not null,
     constraint history_image_review_history_fk
         foreign key (review_history_id) references review_history (id)
 );
@@ -36,16 +44,18 @@ create table history_image
 create index history_image_review_history_index
     on history_image (review_history_id);
 
-
-
+-- 리뷰 히스토리
 create table review_history
 (
-    id         binary(16)   not null
+    id         varchar(255) not null
         primary key,
-    action     varchar(255) null,
+    created_date      datetime     null,
+    delete_date       datetime     null,
+    updated_date      datetime     null,
+    action     varchar(255) not null,
     content    varchar(255) null,
-    event_type varchar(255) null,
-    place_id   varchar(255) null,
-    review_id  varchar(255) null,
-    user_id    varchar(255) null
+    event_type varchar(255) not null,
+    place_id   varchar(255) not null,
+    review_id  varchar(255) not null,
+    user_id    varchar(255) not null
 );

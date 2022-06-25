@@ -1,10 +1,9 @@
 package com.triple.point.domain.review;
 
+import com.triple.point.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -17,18 +16,24 @@ import java.util.UUID;
                 @Index(name = "review_place_index", columnList = "placeId")
         }
 )
-public class Review {
+public class Review extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
+    private String id;
 
+    @Column(nullable = false)
     private String placeId;
 
+    @Column(nullable = false)
     private String title;
 
     private String content;
+
+    public Review(String placeId, String title, String content) {
+        this.id = UUID.randomUUID().toString();
+        this.placeId = placeId;
+        this.title = title;
+        this.content = content;
+    }
 
 }

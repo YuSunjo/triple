@@ -1,10 +1,9 @@
 package com.triple.point.domain.point;
 
+import com.triple.point.domain.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -16,14 +15,17 @@ import java.util.UUID;
                 @Index(name = "point_user_index", columnList = "userId")
         }
 )
-public class Point {
+public class Point extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID id;
+    private String id;
 
+    @Column(nullable = false)
     private String userId;
+
+    public Point(String userId) {
+        this.id = UUID.randomUUID().toString();
+        this.userId = userId;
+    }
 
 }
