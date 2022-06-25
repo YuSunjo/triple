@@ -1,1 +1,25 @@
+server:
+  shutdown: graceful
 
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/triple
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 111111
