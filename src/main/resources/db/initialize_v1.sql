@@ -22,11 +22,15 @@ create table review
     updated_date      datetime     null,
     content  varchar(255) null,
     place_id varchar(255) not null,
-    title    varchar(255) not null
+    title    varchar(255) not null,
+    user_id  varchar(255) not null
 );
 
 create index review_place_index
     on review (place_id);
+
+create index review_user_index
+    on review (user_id);
 
 -- 리뷰 히스토리의 이미지
 create table history_image
@@ -54,8 +58,16 @@ create table review_history
     updated_date      datetime     null,
     action     varchar(255) not null,
     content    varchar(255) null,
-    event_type varchar(255) not null,
     place_id   varchar(255) not null,
     review_id  varchar(255) not null,
-    user_id    varchar(255) not null
+    user_id    varchar(255) not null,
 );
+
+create index review_history_place
+    on review_history (place_id);
+
+create index review_history_review
+    on review_history (review_id);
+
+create index review_history_user
+    on review_history (user_id);

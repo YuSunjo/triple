@@ -13,7 +13,8 @@ import java.util.UUID;
 @Getter
 @Table(
         indexes = {
-                @Index(name = "review_place_index", columnList = "placeId")
+                @Index(name = "review_place_index", columnList = "placeId"),
+                @Index(name = "review_user_index", columnList = "userId")
         }
 )
 public class Review extends BaseTimeEntity {
@@ -25,13 +26,17 @@ public class Review extends BaseTimeEntity {
     private String placeId;
 
     @Column(nullable = false)
+    private String userId;
+
+    @Column(nullable = false)
     private String title;
 
     private String content;
 
-    public Review(String placeId, String title, String content) {
+    public Review(String placeId, String userId, String title, String content) {
         this.id = UUID.randomUUID().toString();
         this.placeId = placeId;
+        this.userId = userId;
         this.title = title;
         this.content = content;
     }

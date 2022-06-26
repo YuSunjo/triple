@@ -23,9 +23,28 @@ public class Point extends BaseTimeEntity {
     @Column(nullable = false)
     private String userId;
 
+    private int point;
+
     public Point(String userId) {
         this.id = UUID.randomUUID().toString();
         this.userId = userId;
+        this.point = 0;
+    }
+
+    public static Point of(String userId) {
+        return new Point(userId);
+    }
+
+    public void addPoint(int point) {
+        this.point += point;
+    }
+
+    public void deletePoint(int point) {
+        this.point += point;
+    }
+
+    public void updatePoint(int point) {
+        this.point += point;
     }
 
 }
