@@ -18,9 +18,9 @@ public class EventController {
     private final EventFactory eventFactory;
 
     @PostMapping("/events")
-    public ApiResponse<String> reviewEvent(@RequestBody @Valid ReviewEventRequest request) {
+    public ApiResponse<String> handlingEvent(@RequestBody @Valid ReviewEventRequest request) {
         EventFactoryFacade eventFacade = eventFactory.getEventFacade(request.getType());
-        eventFacade.collectPoint(request);
+        eventFacade.handlingEvent(request);
         return ApiResponse.OK;
     }
 

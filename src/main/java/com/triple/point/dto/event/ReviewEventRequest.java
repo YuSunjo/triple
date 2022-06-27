@@ -4,6 +4,8 @@ import com.triple.point.domain.history.Action;
 import com.triple.point.domain.history.EventType;
 import com.triple.point.domain.history.PointType;
 import com.triple.point.domain.history.ReviewHistory;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -33,6 +35,17 @@ public class ReviewEventRequest {
 
     @NotBlank
     private String placeId;
+
+    @Builder(builderMethodName = "testBuilder")
+    public ReviewEventRequest(EventType type, Action action, String reviewId, String content, List<String> attachedPhotoIds, String userId, String placeId) {
+        this.type = type;
+        this.action = action;
+        this.reviewId = reviewId;
+        this.content = content;
+        this.attachedPhotoIds = attachedPhotoIds;
+        this.userId = userId;
+        this.placeId = placeId;
+    }
 
     public ReviewHistory toEntity(PointType pointType) {
         return ReviewHistory.builder()

@@ -31,8 +31,19 @@ public class Point extends BaseTimeEntity {
         this.point = 0;
     }
 
+    // testInstance 에서만 사용 가능
+    private Point(String userId, int point) {
+        this.id = UUID.randomUUID().toString();
+        this.userId = userId;
+        this.point = point;
+    }
+
     public static Point of(String userId) {
         return new Point(userId);
+    }
+
+    public static Point testInstance(String userId, int point) {
+        return new Point(userId, point);
     }
 
     public void addPoint(int point) {

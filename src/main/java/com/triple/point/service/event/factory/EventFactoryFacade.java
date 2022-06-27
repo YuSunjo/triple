@@ -4,6 +4,6 @@ import com.triple.point.dto.event.ReviewEventRequest;
 
 public interface EventFactoryFacade {
 
-    void collectPoint(ReviewEventRequest request);
+    void handlingEvent(ReviewEventRequest request);
 
 }

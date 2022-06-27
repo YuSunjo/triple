@@ -18,7 +18,7 @@ public class ReviewEventFacade implements EventFactoryFacade {
 
     @Override
     @Transactional
-    public void collectPoint(ReviewEventRequest request) {
+    public void handlingEvent(ReviewEventRequest request) {
         /*
          * 한 사용자는 장소마다 리뷰를 1개만 작성할 수 있는 validation 체크는
          * 이벤트 발생전 리뷰작성이 이뤄질 때 체크.

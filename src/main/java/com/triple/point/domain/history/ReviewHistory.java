@@ -70,17 +70,18 @@ public class ReviewHistory extends BaseTimeEntity {
         return this.action.equals(Action.DELETE);
     }
 
+
     private boolean isContentPoint() {
-        return this.pointType.getContentPoint() != 0;
+        return this.pointType.getContentPoint() > 0;
     }
 
     private boolean isAttachedPhotoPoint() {
-        return this.pointType.getAttachedPhotoPoint() != 0;
+        return this.pointType.getAttachedPhotoPoint() > 0;
     }
 
     public int calculateContentPoint(ReviewEventRequest request, int existContentPoint) {
         // 과거 컨텐츠 포인트가 없었다면?
-        if (!this.isContentPoint()) {
+        if ((!this.isContentPoint())) {
             return request.existContent(existContentPoint);
         }
         // request - 컨텐츠 길이가 1이상이였다가 컨텐츠 길이가 0 이면 마이너스 해줘야함

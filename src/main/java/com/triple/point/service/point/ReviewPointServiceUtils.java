@@ -29,7 +29,7 @@ public class ReviewPointServiceUtils {
         ReviewHistory reviewHistory = reviewHistoryRepository.findByUserIdAndPlaceId(userId, placeId)
                 .orElseThrow(() -> new NotFoundException("최신 history가 없어 포인트가 그대로 유지됩니다."));
         if (reviewHistory.isDelete()) {
-            throw new ValidationException("최근에 delete 했을 경우 update를 할 수 없습니다.");
+            throw new ValidationException("최근에 delete 했을 경우 이벤트 발생 할 수 없습니다.");
         }
         return reviewHistory;
     }

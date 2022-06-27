@@ -11,6 +11,7 @@ import com.triple.point.dto.event.ReviewEventRequest;
 import com.triple.point.exception.customException.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +28,7 @@ public class ReviewPointService {
     private final ReviewRepository reviewRepository;
     private final ReviewHistoryRepository reviewHistoryRepository;
 
+    @Transactional
     public PointType managePoint(ReviewEventRequest request) {
         if (request.isAdd()) {
             return addReview(request);
@@ -72,8 +74,7 @@ public class ReviewPointService {
         Review review = reviewRepository.findReviewById(request.getReviewId())
                 .orElseThrow(() -> new NotFoundException(String.format("존재하는 리뷰 (%s) 가 없어 delete 하지 못합니다.", request.getReviewId())));
         review.updateDelete();
-        ReviewHistory reviewHistory = reviewHistoryRepository.findByUserIdAndPlaceId(request.getUserId(), request.getPlaceId())
-                .orElseThrow(() -> new NotFoundException("최신 history가 없어 포인트가 그대로 유지됩니다."));
+        ReviewHistory reviewHistory = ReviewPointServiceUtils.findNotDeleteReviewHistory(reviewHistoryRepository, request.getUserId(), request.getPlaceId());
         Point userPoint = pointRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new NotFoundException("존재하는 포인트가 없습니다."));
         int point = ReviewPointServiceUtils.calculateDeletePoint(reviewHistory.getPointType());
