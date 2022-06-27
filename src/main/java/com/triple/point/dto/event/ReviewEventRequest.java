@@ -59,7 +59,7 @@ public class ReviewEventRequest {
     }
 
     public Review toReviewEntity() {
-        return new Review(placeId, userId, content);
+        return new Review(reviewId, placeId, userId, content);
     }
 
     public boolean isAdd() {

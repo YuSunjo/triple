@@ -13,7 +13,6 @@ import com.triple.point.dto.event.ReviewEventRequest;
 import com.triple.point.exception.customException.ConflictException;
 import com.triple.point.exception.customException.NotFoundException;
 import com.triple.point.exception.customException.ValidationException;
-import com.triple.point.service.point.ReviewPointService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -186,6 +185,9 @@ public class ReviewPointServiceExceptionTest {
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
                 .build();
+
+        reviewRepository.save(Review.testInstance(request.getReviewId(), request.getPlaceId(), request.getUserId(), request.getContent()));
+
         // when & then
         assertThatThrownBy(
                 () -> reviewPointService.managePoint(request)

@@ -38,8 +38,7 @@ public class Review extends BaseTimeEntity {
         this.content = content;
     }
 
-    // testInstance 에서만 사용 가능
-    private Review(String id, String placeId, String userId, String content) {
+    public Review(String id, String placeId, String userId, String content) {
         this.id = id;
         this.placeId = placeId;
         this.userId = userId;

@@ -114,7 +114,7 @@ public class ReviewPointServiceTest {
                 .build();
 
         // 이미 리뷰를 쓴 사람이 있다.
-        Review review = Review.testInstance("2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "title", "좋아요!");
+        Review review = Review.testInstance("240a0658-dc5f-4878-9381-ebb7b2667772", "2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "좋아요!");
         reviewRepository.save(review);
 
         // when
