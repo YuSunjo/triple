@@ -8,6 +8,7 @@ import com.triple.point.domain.point.repository.PointRepository;
 import com.triple.point.domain.review.Review;
 import com.triple.point.domain.review.repository.ReviewRepository;
 import com.triple.point.dto.event.ReviewEventRequest;
+import com.triple.point.exception.customException.ConflictException;
 import com.triple.point.exception.customException.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewPointService {
 
+    /*
+    정책이 바뀔수도 있으니 db로 하는것이 나을지 고민
+     */
     // 컨텐츠 존재하면 부여하는 포인트
     private final int EXIST_CONTENT_POINT = 1;
     // 사진이 존재하면 부여하는 포인트
@@ -42,10 +46,19 @@ public class ReviewPointService {
         throw new NotFoundException("존재하지 않는 포인트 로직입니다.");
     }
 
+    /*
+     * 한 사용자는 장소마다 리뷰를 1개만 작성할 수 있는 validation 체크는
+     * 이벤트 발생전 리뷰작성이 이뤄질 때 체크하는게 맞는것 같지만 혹시 모르니까 체크
+     */
     private PointType addReview(ReviewEventRequest request) {
+        reviewRepository.findByUserIdAndPlaceId(request.getUserId(), request.getPlaceId())
+                .ifPresent(review -> {
+                    throw new ConflictException("한 사람당 한 장소의 리뷰는 하나입니다.");
+                });
+        reviewRepository.save(request.toReviewEntity());
         int contentPoint = request.existContent(EXIST_CONTENT_POINT);
         int attachedPhotoPoint = request.existAttachedPhoto(EXIST_ATTACHED_PHOTO_POINT);
-        int firstReviewPoint = ReviewPointServiceUtils.validateReview(reviewRepository, request.getPlaceId(), EXIST_FIRST_REVIEW_POINT);
+        int firstReviewPoint = ReviewPointServiceUtils.validateFirstReview(reviewRepository, request.getPlaceId(), EXIST_FIRST_REVIEW_POINT);
 
         Point userPoint = pointRepository.findByUserId(request.getUserId())
                 .orElseGet(() -> pointRepository.save(Point.of(request.getUserId())));

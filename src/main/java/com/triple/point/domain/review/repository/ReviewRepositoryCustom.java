@@ -10,4 +10,6 @@ public interface ReviewRepositoryCustom {
 
     Optional<Review> findReviewById(String reviewId);
 
+    Optional<Review> findByUserIdAndPlaceId(String userId, String placeId);
+
 }

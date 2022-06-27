@@ -10,7 +10,7 @@ import com.triple.point.exception.customException.ValidationException;
 
 public class ReviewPointServiceUtils {
 
-    public static int validateReview(ReviewRepository reviewRepository, String placeId, int existFirstReviewPoint) {
+    public static int validateFirstReview(ReviewRepository reviewRepository, String placeId, int existFirstReviewPoint) {
         Review review = reviewRepository.existsByPlaceId(placeId);
         if (review != null) {
             return 0;

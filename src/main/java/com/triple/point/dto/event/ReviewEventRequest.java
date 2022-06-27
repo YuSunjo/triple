@@ -4,7 +4,7 @@ import com.triple.point.domain.history.Action;
 import com.triple.point.domain.history.EventType;
 import com.triple.point.domain.history.PointType;
 import com.triple.point.domain.history.ReviewHistory;
-import lombok.AllArgsConstructor;
+import com.triple.point.domain.review.Review;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,6 +56,10 @@ public class ReviewEventRequest {
                 .placeId(placeId)
                 .pointType(pointType)
                 .build();
+    }
+
+    public Review toReviewEntity() {
+        return new Review(placeId, userId, content);
     }
 
     public boolean isAdd() {

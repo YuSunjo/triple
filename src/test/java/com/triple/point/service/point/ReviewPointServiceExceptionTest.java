@@ -10,6 +10,7 @@ import com.triple.point.domain.point.repository.PointRepository;
 import com.triple.point.domain.review.Review;
 import com.triple.point.domain.review.repository.ReviewRepository;
 import com.triple.point.dto.event.ReviewEventRequest;
+import com.triple.point.exception.customException.ConflictException;
 import com.triple.point.exception.customException.NotFoundException;
 import com.triple.point.exception.customException.ValidationException;
 import com.triple.point.service.point.ReviewPointService;
@@ -112,7 +113,7 @@ public class ReviewPointServiceExceptionTest {
         Point point = Point.testInstance("3ede0ef2-92b7-4817-a5f3-0c575361f745", 0);
         pointRepository.save(point);
 
-        Review review = Review.testInstance("240a0658-dc5f-4878-9381-ebb7b2667772", "2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "title", "content");
+        Review review = Review.testInstance("240a0658-dc5f-4878-9381-ebb7b2667772", "2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "content");
         reviewRepository.save(review);
 
         ReviewEventRequest request = ReviewEventRequest.testBuilder()
@@ -160,6 +161,35 @@ public class ReviewPointServiceExceptionTest {
         assertThatThrownBy(
                 () -> reviewPointService.managePoint(request)
         ).isInstanceOf(NotFoundException.class);
+    }
+
+    @DisplayName("이미 같은 유저가 같은 장소에 리뷰를 했는데 또 할경우 ConflictException")
+    @Test
+    void reviewPoint_exception_5() {
+        // given
+        ReviewHistory reviewHistory = ReviewHistory.builder()
+                .action(Action.ADD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아요!~~~~~~~~~")
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .pointType(PointType.of(1, 1, 1, 1, 1, 1))
+                .build();
+        reviewHistoryRepository.save(reviewHistory);
+
+        ReviewEventRequest request = ReviewEventRequest.testBuilder()
+                .type(EventType.REVIEW)
+                .action(Action.ADD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아요!")
+                .attachedPhotoIds(Collections.emptyList())
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .build();
+        // when & then
+        assertThatThrownBy(
+                () -> reviewPointService.managePoint(request)
+        ).isInstanceOf(ConflictException.class);
     }
 
 }

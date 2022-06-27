@@ -29,34 +29,29 @@ public class Review extends BaseTimeEntity {
     @Column(nullable = false)
     private String userId;
 
-    @Column(nullable = false)
-    private String title;
-
     private String content;
 
-    public Review(String placeId, String userId, String title, String content) {
+    public Review(String placeId, String userId, String content) {
         this.id = UUID.randomUUID().toString();
         this.placeId = placeId;
         this.userId = userId;
-        this.title = title;
         this.content = content;
     }
 
     // testInstance 에서만 사용 가능
-    private Review(String id, String placeId, String userId, String title, String content) {
+    private Review(String id, String placeId, String userId, String content) {
         this.id = id;
         this.placeId = placeId;
         this.userId = userId;
-        this.title = title;
         this.content = content;
     }
 
-    public static Review testInstance(String placeId, String userId, String title, String content) {
-        return new Review(placeId, userId, title, content);
+    public static Review testInstance(String placeId, String userId, String content) {
+        return new Review(placeId, userId, content);
     }
 
-    public static Review testInstance(String id, String placeId, String userId, String title, String content) {
-        return new Review(id, placeId, userId, title, content);
+    public static Review testInstance(String id, String placeId, String userId, String content) {
+        return new Review(id, placeId, userId, content);
     }
 
 }

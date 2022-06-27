@@ -35,4 +35,17 @@ public class ReviewRepositoryCustomImpl implements ReviewRepositoryCustom {
         );
     }
 
+    @Override
+    public Optional<Review> findByUserIdAndPlaceId(String userId, String placeId) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(review)
+                        .where(
+                                review.userId.eq(userId),
+                                review.placeId.eq(placeId),
+                                review.deleteDate.isNull()
+                        )
+                        .fetchOne()
+        );
+    }
+
 }
