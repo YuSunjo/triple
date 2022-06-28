@@ -9,15 +9,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtils {
 
-    public static void assertPointType(PointType pointType, int existContentPoint, int contentPoint,
-                                       int existAttachedPhotoPoint, int attachedPhotoPoint,
-                                       int existFirstReviewPoint, int firstReviewPoint) {
+    public static void assertPointType(PointType pointType, int existContentPoint, int contentPoint, boolean isContentPoint,
+                                       int existAttachedPhotoPoint, int attachedPhotoPoint, boolean isAttachedPhotoPoint,
+                                       int existFirstReviewPoint, int firstReviewPoint, boolean isFirstReviewPoint) {
         assertThat(pointType.getExistContentPoint()).isEqualTo(existContentPoint);
         assertThat(pointType.getContentPoint()).isEqualTo(contentPoint);
+        assertThat(pointType.getIsContentPoint()).isEqualTo(isContentPoint);
+
         assertThat(pointType.getExistAttachedPhotoPoint()).isEqualTo(existAttachedPhotoPoint);
         assertThat(pointType.getAttachedPhotoPoint()).isEqualTo(attachedPhotoPoint);
+        assertThat(pointType.getIsAttachedPhotoPoint()).isEqualTo(isAttachedPhotoPoint);
+
         assertThat(pointType.getExistFirstReviewPoint()).isEqualTo(existFirstReviewPoint);
         assertThat(pointType.getFirstReviewPoint()).isEqualTo(firstReviewPoint);
+        assertThat(pointType.getIsFirstReviewPoint()).isEqualTo(isFirstReviewPoint);
     }
 
     public static void assertReviewHistory(ReviewHistory reviewHistory, Action action, String reviewId, String userId, String placeId) {

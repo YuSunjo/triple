@@ -5,6 +5,7 @@ import com.triple.point.domain.history.EventType;
 import com.triple.point.domain.history.PointType;
 import com.triple.point.domain.history.ReviewHistory;
 import com.triple.point.domain.review.Review;
+import com.triple.point.dto.point.PointDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -82,18 +83,18 @@ public class ReviewEventRequest {
         return this.attachedPhotoIds.size() >= 1;
     }
 
-    public int existContent(int existContentPoint) {
+    public PointDto existContent(int historyPoint, int existContentPoint) {
         if (this.content.length() >= 1) {
-            return existContentPoint;
+            return PointDto.of(historyPoint + existContentPoint, true);
         }
-        return 0;
+        return PointDto.of(0, false);
     }
 
-    public int existAttachedPhoto(int existAttachedPhotoPoint) {
+    public PointDto existAttachedPhoto(int historyPoint, int existAttachedPhotoPoint) {
         if (this.attachedPhotoIds.size() >= 1) {
-            return existAttachedPhotoPoint;
+            return PointDto.of(historyPoint + existAttachedPhotoPoint, true);
         }
-        return 0;
+        return PointDto.of(0, false);
     }
 
 }

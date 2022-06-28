@@ -67,7 +67,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(3);
-        TestUtils.assertPointType(pointType, 1, 1, 1, 1, 1, 1);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 1, true, 1, 1, true);
     }
 
     @DisplayName("리뷰 작성 ADD - 컨텐츠 1자 이상 사진 1장 이상 리뷰 처음 썼을 경우가 아닌 경우")
@@ -96,7 +96,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(2);
-        TestUtils.assertPointType(pointType, 1, 1, 1, 1, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 1, true, 1, 0, false);
     }
 
     @DisplayName("리뷰 작성 ADD - 컨텐츠 1자 이상 사진 0장 리뷰 처음 썼을 경우가 아닌 경우")
@@ -125,7 +125,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(1);
-        TestUtils.assertPointType(pointType, 1, 1, 1, 0, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 0, false, 1, 0, false);
     }
 
     @DisplayName("리뷰 작성 MOD - 컨텐츠 1자 이상 사진 1장 리뷰 처음 썼을 경우 -> 컨텐츠 1자 이상 사진 0장 으로 변경했을 경우, MOD일 경우 처음 쓴 리뷰는 고려 안함")
@@ -138,7 +138,7 @@ public class ReviewPointServiceTest {
                 .content("좋아요!~~~~~~~~~")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(1, 1, 1, 1, 1, 1))
+                .pointType(PointType.of(1, 1, true, 1, 1, true, 1, 1, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -163,7 +163,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(2);
-        TestUtils.assertPointType(pointType, 1, 0, 1, -1, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 0, false, 1, 1, true);
     }
 
     @DisplayName("리뷰 작성 MOD - 컨텐츠 1자 이상 사진 1장 리뷰 처음 썼을 경우 -> 컨텐츠 0자 이상 사진 0장 으로 변경했을 경우, MOD일 경우 처음 쓴 리뷰는 고려 안함")
@@ -176,7 +176,7 @@ public class ReviewPointServiceTest {
                 .content("좋아요!~~~~~~~~~")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(1, 1, 1, 1, 1, 1))
+                .pointType(PointType.of(1, 1, true, 1, 1, true, 1, 1, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -201,7 +201,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(1);
-        TestUtils.assertPointType(pointType, 1, -1, 1, -1, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 0, false, 1, 0, false, 1, 1, true);
     }
 
     @DisplayName("리뷰 작성 MOD - 컨텐츠 0자 사진 1장 리뷰 처음 썼을 경우 -> 컨텐츠 1자 이상 사진 0장 으로 변경했을 경우, MOD일 경우 처음 쓴 리뷰는 고려 안함")
@@ -214,7 +214,7 @@ public class ReviewPointServiceTest {
                 .content("")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(1, 0, 1, 1, 1, 1))
+                .pointType(PointType.of(1, 0, false, 1, 1, true, 1, 1, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -239,7 +239,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(2);
-        TestUtils.assertPointType(pointType, 1, 1, 1, -1, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 0, false, 1, 1, true);
     }
 
     @DisplayName("리뷰 작성 MOD - 과거에는 포인트를 2점씩 현재는 1점씩, 컨텐츠 0자 사진 0장 리뷰 처음 썼을 경우 -> 컨텐츠 1자 이상 사진 0장 으로 변경했을 경우, MOD일 경우 처음 쓴 리뷰는 고려 안함")
@@ -252,7 +252,7 @@ public class ReviewPointServiceTest {
                 .content("")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(2, 0, 2, 0, 2, 2))
+                .pointType(PointType.of(2, 0, false, 2, 0, false, 2, 2, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -277,7 +277,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(3);
-        TestUtils.assertPointType(pointType, 1, 1, 1, 0, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 1, true,1, 0, false, 1, 2, true);
     }
 
     @DisplayName("리뷰 작성 MOD - 과거에는 포인트를 2점씩 현재는 1점씩, 컨텐츠 1자 사진 0장 리뷰 처음 썼을 경우 -> 컨텐츠 0자 이상 사진 0장 으로 변경했을 경우(과거 포인트로 깎임), MOD일 경우 처음 쓴 리뷰는 고려 안함")
@@ -290,7 +290,7 @@ public class ReviewPointServiceTest {
                 .content("좋아요~~")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(2, 2, 2, 0, 2, 2))
+                .pointType(PointType.of(2, 2, true, 2, 0, false, 2, 2, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -315,7 +315,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(2);
-        TestUtils.assertPointType(pointType, 1, -2, 1, 0, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 0, false, 1, 0, false, 1, 2, true);
     }
 
     @DisplayName("리뷰 작성 DELETE - 컨텐츠 1자 사진 0장 리뷰 처음 썼을 경우 -> 포인트 모두 깎임")
@@ -328,7 +328,7 @@ public class ReviewPointServiceTest {
                 .content("좋아요~~")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(1, 1, 1, 0, 1, 1))
+                .pointType(PointType.of(1, 1, true, 1, 0, false, 1, 1, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -356,7 +356,7 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(0);
-        TestUtils.assertPointType(pointType, 1, -1, 1, 0, 1, -1);
+        TestUtils.assertPointType(pointType, 1, 0, false, 1, 0, false, 1, 0, false);
     }
 
     @DisplayName("리뷰 작성 MOD - 컨텐츠 0자 사진 1장 리뷰 처음 썼을 경우 -> 컨텐츠 1자 이상 사진 0장 -> 컨텐츠 1자 이상 사진 1장 이상, MOD일 경우 처음 쓴 리뷰는 고려 안함 ")
@@ -369,7 +369,7 @@ public class ReviewPointServiceTest {
                 .content("좋아요~~")
                 .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
-                .pointType(PointType.of(1, 1, 1, -1, 1, 0))
+                .pointType(PointType.of(1, 1, true, 1, 0, false, 1, 1, true))
                 .build();
         reviewHistoryRepository.save(reviewHistory);
 
@@ -397,7 +397,133 @@ public class ReviewPointServiceTest {
         assertThat(pointList.size()).isEqualTo(1);
         assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
         assertThat(pointList.get(0).getPoint()).isEqualTo(3);
-        TestUtils.assertPointType(pointType, 1, 0, 1, 1, 1, 0);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 1, true, 1, 1, true);
+    }
+
+    @DisplayName("리뷰 작성 MOD - 컨텐츠 0자 사진 1장 리뷰 처음 썼을 경우 -> 컨텐츠 1자 이상 사진 1장 -> 컨텐츠 1자 이상 사진 1장 이상, MOD일 경우 처음 쓴 리뷰는 고려 안함 ")
+    @Test
+    void reviewPoint_11() {
+        // given
+        ReviewHistory reviewHistory = ReviewHistory.builder()
+                .action(Action.MOD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아요~~")
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .pointType(PointType.of(1, 1, true, 1, 1, true, 1, 1, true))
+                .build();
+        reviewHistoryRepository.save(reviewHistory);
+
+        Point point = Point.testInstance("3ede0ef2-92b7-4817-a5f3-0c575361f745", 3);
+        pointRepository.save(point);
+
+        Review review = Review.testInstance("240a0658-dc5f-4878-9381-ebb7b2667772", "2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "content");
+        reviewRepository.save(review);
+
+        ReviewEventRequest request = ReviewEventRequest.testBuilder()
+                .type(EventType.REVIEW)
+                .action(Action.MOD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아용~~~~")
+                .attachedPhotoIds(List.of("e4d1a64e-a531-46de-88d0-ff0ed70c0bb8"))
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .build();
+
+        // when
+        PointType pointType = reviewPointService.managePoint(request);
+
+        // then
+        List<Point> pointList = pointRepository.findAll();
+        assertThat(pointList.size()).isEqualTo(1);
+        assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
+        assertThat(pointList.get(0).getPoint()).isEqualTo(3);
+        TestUtils.assertPointType(pointType, 1, 1, true, 1, 1, true, 1, 1, true);
+    }
+
+    // ---------------------------------------------------------------------------------------------------------------------------------------
+    // 그럴일이 없을 것 같지만 어쩌다가 포인트가 + 이거나 - 일 경우
+
+    @DisplayName("리뷰 작성 MOD - 마이너스 포인트일경우 - 컨텐츠 0자 사진 0장 리뷰(컨텐츠 포인트가 -1) -> 컨텐츠 1자 이상 사진 1장 이상, MOD일 경우 처음 쓴 리뷰는 고려 안함")
+    @Test
+    void reviewPoint_12() {
+        // given
+        ReviewHistory reviewHistory = ReviewHistory.builder()
+                .action(Action.MOD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아요~~")
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .pointType(PointType.of(1, -1, false, 1, 0, false, 1, -1, false))
+                .build();
+        reviewHistoryRepository.save(reviewHistory);
+
+        Point point = Point.testInstance("3ede0ef2-92b7-4817-a5f3-0c575361f745", -2);
+        pointRepository.save(point);
+
+        Review review = Review.testInstance("240a0658-dc5f-4878-9381-ebb7b2667772", "2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "content");
+        reviewRepository.save(review);
+
+        ReviewEventRequest request = ReviewEventRequest.testBuilder()
+                .type(EventType.REVIEW)
+                .action(Action.MOD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아용~~~~")
+                .attachedPhotoIds(List.of("e4d1a64e-a531-46de-88d0-ff0ed70c0bb8"))
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .build();
+
+        // when
+        PointType pointType = reviewPointService.managePoint(request);
+
+        // then
+        List<Point> pointList = pointRepository.findAll();
+        assertThat(pointList.size()).isEqualTo(1);
+        assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
+        assertThat(pointList.get(0).getPoint()).isEqualTo(0);
+        TestUtils.assertPointType(pointType, 1, 0, true, 1, 1, true, 1, -1, false);
+    }
+
+    @DisplayName("리뷰 작성 MOD - 플러스 포인트일경우 - 컨텐츠 0자 사진 0장 리뷰(컨텐츠 포인트가 +1) -> 컨텐츠 1자 이상 사진 1장 이상, MOD일 경우 처음 쓴 리뷰는 고려 안함")
+    @Test
+    void reviewPoint_13() {
+        // given
+        ReviewHistory reviewHistory = ReviewHistory.builder()
+                .action(Action.MOD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아요~~")
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .pointType(PointType.of(1, 1, false, 1, 0, false, 1, 0, false))
+                .build();
+        reviewHistoryRepository.save(reviewHistory);
+
+        Point point = Point.testInstance("3ede0ef2-92b7-4817-a5f3-0c575361f745", -2);
+        pointRepository.save(point);
+
+        Review review = Review.testInstance("240a0658-dc5f-4878-9381-ebb7b2667772", "2e4baf1c-5acb-4efb-a1af-eddada31b00f", "userId", "content");
+        reviewRepository.save(review);
+
+        ReviewEventRequest request = ReviewEventRequest.testBuilder()
+                .type(EventType.REVIEW)
+                .action(Action.MOD)
+                .reviewId("240a0658-dc5f-4878-9381-ebb7b2667772")
+                .content("좋아용~~~~")
+                .attachedPhotoIds(List.of("e4d1a64e-a531-46de-88d0-ff0ed70c0bb8"))
+                .userId("3ede0ef2-92b7-4817-a5f3-0c575361f745")
+                .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
+                .build();
+
+        // when
+        PointType pointType = reviewPointService.managePoint(request);
+
+        // then
+        List<Point> pointList = pointRepository.findAll();
+        assertThat(pointList.size()).isEqualTo(1);
+        assertThat(pointList.get(0).getUserId()).isEqualTo(request.getUserId());
+        assertThat(pointList.get(0).getPoint()).isEqualTo(0);
+        TestUtils.assertPointType(pointType, 1, 2, true, 1, 1, true, 1, 0, false);
     }
 
 }

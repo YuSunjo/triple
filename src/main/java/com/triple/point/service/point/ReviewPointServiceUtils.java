@@ -1,30 +1,23 @@
 package com.triple.point.service.point;
 
-import com.triple.point.domain.history.PointType;
 import com.triple.point.domain.history.ReviewHistory;
 import com.triple.point.domain.history.repository.ReviewHistoryRepository;
 import com.triple.point.domain.review.Review;
 import com.triple.point.domain.review.repository.ReviewRepository;
 import com.triple.point.dto.event.ReviewEventRequest;
+import com.triple.point.dto.point.PointDto;
 import com.triple.point.exception.customException.ConflictException;
 import com.triple.point.exception.customException.NotFoundException;
 import com.triple.point.exception.customException.ValidationException;
 
 public class ReviewPointServiceUtils {
 
-    public static int validateFirstReview(ReviewRepository reviewRepository, String placeId, int existFirstReviewPoint) {
+    public static PointDto validateFirstReview(ReviewRepository reviewRepository, String placeId, int existFirstReviewPoint) {
         Review review = reviewRepository.existsByPlaceId(placeId);
         if (review != null) {
-            return 0;
+            return PointDto.of(0, false);
         }
-        return existFirstReviewPoint;
-    }
-
-    public static int calculateDeletePoint(PointType pointType) {
-        int contentPoint = pointType.getContentPoint();
-        int attachedPhotoPoint = pointType.getAttachedPhotoPoint();
-        int firstReviewPoint = pointType.getFirstReviewPoint();
-        return -(contentPoint + attachedPhotoPoint + firstReviewPoint);
+        return PointDto.of(existFirstReviewPoint, true);
     }
 
     public static ReviewHistory findNotDeleteReviewHistory(ReviewHistoryRepository reviewHistoryRepository, String userId, String placeId) {

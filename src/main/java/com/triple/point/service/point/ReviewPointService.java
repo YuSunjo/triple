@@ -8,7 +8,7 @@ import com.triple.point.domain.point.repository.PointRepository;
 import com.triple.point.domain.review.Review;
 import com.triple.point.domain.review.repository.ReviewRepository;
 import com.triple.point.dto.event.ReviewEventRequest;
-import com.triple.point.exception.customException.ConflictException;
+import com.triple.point.dto.point.PointDto;
 import com.triple.point.exception.customException.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,46 +51,56 @@ public class ReviewPointService {
      * 이벤트 발생전 리뷰작성이 이뤄질 때 체크하는게 맞는것 같지만 혹시 모르니까 체크
      */
     private PointType addReview(ReviewEventRequest request) {
-        int contentPoint = request.existContent(EXIST_CONTENT_POINT);
-        int attachedPhotoPoint = request.existAttachedPhoto(EXIST_ATTACHED_PHOTO_POINT);
-        int firstReviewPoint = ReviewPointServiceUtils.validateFirstReview(reviewRepository, request.getPlaceId(), EXIST_FIRST_REVIEW_POINT);
+        PointDto contentPoint = request.existContent(0, EXIST_CONTENT_POINT);
+        PointDto attachedPhotoPoint = request.existAttachedPhoto(0, EXIST_ATTACHED_PHOTO_POINT);
+        PointDto firstReviewPoint = ReviewPointServiceUtils.validateFirstReview(reviewRepository, request.getPlaceId(), EXIST_FIRST_REVIEW_POINT);
         ReviewPointServiceUtils.validateReview(reviewRepository, request);
 
         Point userPoint = pointRepository.findByUserId(request.getUserId())
                 .orElseGet(() -> pointRepository.save(Point.of(request.getUserId())));
-        int point = contentPoint + attachedPhotoPoint + firstReviewPoint;
+        int point = contentPoint.getPoint() + attachedPhotoPoint.getPoint() + firstReviewPoint.getPoint();
         userPoint.addPoint(point);
 
-        return PointType.of(EXIST_CONTENT_POINT, contentPoint, EXIST_ATTACHED_PHOTO_POINT, attachedPhotoPoint, EXIST_FIRST_REVIEW_POINT, firstReviewPoint);
+        return PointType.of(EXIST_CONTENT_POINT, contentPoint.getPoint(), contentPoint.getIsPoint(), EXIST_ATTACHED_PHOTO_POINT, attachedPhotoPoint.getPoint(), attachedPhotoPoint.getIsPoint(), EXIST_FIRST_REVIEW_POINT, firstReviewPoint.getPoint(), firstReviewPoint.getIsPoint());
     }
 
     private PointType modReview(ReviewEventRequest request) {
         ReviewHistory reviewHistory = ReviewPointServiceUtils.findNotDeleteReviewHistory(reviewHistoryRepository, request.getUserId(), request.getPlaceId());
 
-        int contentPoint = reviewHistory.calculateContentPoint(request, EXIST_CONTENT_POINT);
-        int attachedPhotoPoint = reviewHistory.calculateAttachedPhotoPoint(request, EXIST_ATTACHED_PHOTO_POINT);
-        int firstReviewPoint = reviewHistory.calculateFirstReviewPoint();
+        PointDto contentPoint = reviewHistory.calculateContentPoint(request, EXIST_CONTENT_POINT);
+        PointDto attachedPhotoPoint = reviewHistory.calculateAttachedPhotoPoint(request, EXIST_ATTACHED_PHOTO_POINT);
+        PointDto firstReviewPoint = reviewHistory.calculateFirstReviewPoint();
 
+        int currentPoint = contentPoint.getPoint() + attachedPhotoPoint.getPoint() + firstReviewPoint.getPoint();
+        int historyPoint = reviewHistory.historyPoint();
+
+        int point = currentPoint - historyPoint;
         Point userPoint = pointRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new NotFoundException("존재하는 포인트가 없습니다."));
-        int point = contentPoint + attachedPhotoPoint + firstReviewPoint;
         userPoint.updatePoint(point);
 
-        return PointType.of(EXIST_CONTENT_POINT, contentPoint, EXIST_ATTACHED_PHOTO_POINT, attachedPhotoPoint, EXIST_FIRST_REVIEW_POINT, firstReviewPoint);
+        return PointType.of(EXIST_CONTENT_POINT, contentPoint.getPoint(), contentPoint.getIsPoint(), EXIST_ATTACHED_PHOTO_POINT, attachedPhotoPoint.getPoint(), attachedPhotoPoint.getIsPoint(), EXIST_FIRST_REVIEW_POINT, firstReviewPoint.getPoint(), firstReviewPoint.getIsPoint());
     }
 
     private PointType deleteReview(ReviewEventRequest request) {
         Review review = reviewRepository.findReviewById(request.getReviewId())
                 .orElseThrow(() -> new NotFoundException(String.format("존재하는 리뷰 (%s) 가 없어 delete 하지 못합니다.", request.getReviewId())));
         review.updateDelete();
+
         ReviewHistory reviewHistory = ReviewPointServiceUtils.findNotDeleteReviewHistory(reviewHistoryRepository, request.getUserId(), request.getPlaceId());
+        int contentPoint = reviewHistory.calculateDeleteContentPoint();
+        int attachedPoint = reviewHistory.calculateDeleteAttachedPoint();
+        int firstReviewPoint = reviewHistory.calculateDeleteFirstReviewPoint();
+
+        int currentPoint = contentPoint + attachedPoint + firstReviewPoint;
+        int historyPoint = reviewHistory.historyPoint();
+
+        int point = currentPoint - historyPoint;
         Point userPoint = pointRepository.findByUserId(request.getUserId())
                 .orElseThrow(() -> new NotFoundException("존재하는 포인트가 없습니다."));
-        int point = ReviewPointServiceUtils.calculateDeletePoint(reviewHistory.getPointType());
         userPoint.deletePoint(point);
-        return PointType.of(EXIST_CONTENT_POINT, -reviewHistory.getPointType().getContentPoint(),
-                EXIST_ATTACHED_PHOTO_POINT, -reviewHistory.getPointType().getAttachedPhotoPoint(),
-                EXIST_FIRST_REVIEW_POINT, -reviewHistory.getPointType().getFirstReviewPoint());
+
+        return PointType.of(EXIST_CONTENT_POINT, contentPoint, false, EXIST_ATTACHED_PHOTO_POINT, attachedPoint, false, EXIST_FIRST_REVIEW_POINT, firstReviewPoint, false);
     }
 
 }

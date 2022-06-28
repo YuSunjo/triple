@@ -2,6 +2,7 @@ package com.triple.point.domain.history;
 
 import com.triple.point.domain.BaseTimeEntity;
 import com.triple.point.dto.event.ReviewEventRequest;
+import com.triple.point.dto.point.PointDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,38 +73,69 @@ public class ReviewHistory extends BaseTimeEntity {
 
 
     private boolean isContentPoint() {
-        return this.pointType.getContentPoint() > 0;
+        return this.pointType.getIsContentPoint();
     }
 
     private boolean isAttachedPhotoPoint() {
-        return this.pointType.getAttachedPhotoPoint() > 0;
+        return this.pointType.getIsAttachedPhotoPoint();
     }
 
-    public int calculateContentPoint(ReviewEventRequest request, int existContentPoint) {
+    private boolean isFirstReviewPoint() {
+        return this.pointType.getFirstReviewPoint() != 0;
+    }
+
+    public PointDto calculateContentPoint(ReviewEventRequest request, int existContentPoint) {
         // 과거 컨텐츠 포인트가 없었다면?
         if ((!this.isContentPoint())) {
-            return request.existContent(existContentPoint);
+            return request.existContent(this.pointType.getContentPoint(), existContentPoint);
         }
         // request - 컨텐츠 길이가 1이상이였다가 컨텐츠 길이가 0 이면 마이너스 해줘야함
         if (!request.isContent()) {
-            return -(this.pointType.getContentPoint());
+            return PointDto.of(this.pointType.getContentPoint() - this.pointType.getExistContentPoint(), false);
         }
-        return 0;
+        // 그대로
+        return PointDto.of(this.pointType.getContentPoint(), this.pointType.getIsContentPoint());
     }
 
-    public int calculateAttachedPhotoPoint(ReviewEventRequest request, int existAttachedPhotoPoint) {
+    public PointDto calculateAttachedPhotoPoint(ReviewEventRequest request, int existAttachedPhotoPoint) {
         // 과거 사진 포인트가 없었다면?
         if (!this.isAttachedPhotoPoint()) {
-            return request.existAttachedPhoto(existAttachedPhotoPoint);
+            return request.existAttachedPhoto(this.pointType.getAttachedPhotoPoint(), existAttachedPhotoPoint);
         }
+        // 과거에 있었는데 현재 없다면?
         if (!request.isAttachedPhoto()) {
-            return -(this.pointType.getAttachedPhotoPoint());
+            return PointDto.of(this.pointType.getAttachedPhotoPoint() - this.pointType.getExistAttachedPhotoPoint(), false);
         }
-        return 0;
+        return PointDto.of(this.pointType.getAttachedPhotoPoint(), this.pointType.getIsAttachedPhotoPoint());
     }
 
-    public int calculateFirstReviewPoint() {
-        return 0;
+    public PointDto calculateFirstReviewPoint() {
+        return PointDto.of(this.pointType.getFirstReviewPoint(), this.pointType.getIsFirstReviewPoint());
+    }
+
+    public int historyPoint() {
+        return this.pointType.getContentPoint() + this.pointType.getAttachedPhotoPoint() + this.pointType.getFirstReviewPoint();
+    }
+
+    public int calculateDeleteContentPoint() {
+        if (!this.isContentPoint()) {
+            return this.pointType.getContentPoint();
+        }
+        return this.pointType.getContentPoint() - this.pointType.getExistContentPoint();
+    }
+
+    public int calculateDeleteAttachedPoint() {
+        if (!this.isAttachedPhotoPoint()) {
+            return this.pointType.getAttachedPhotoPoint();
+        }
+        return this.pointType.getAttachedPhotoPoint() - this.pointType.getExistAttachedPhotoPoint();
+    }
+
+    public int calculateDeleteFirstReviewPoint() {
+        if (!this.isFirstReviewPoint()) {
+            return this.pointType.getFirstReviewPoint();
+        }
+        return this.pointType.getFirstReviewPoint() - this.pointType.getExistFirstReviewPoint();
     }
 
 }

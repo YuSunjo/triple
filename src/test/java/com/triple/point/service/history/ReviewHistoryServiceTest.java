@@ -47,7 +47,7 @@ public class ReviewHistoryServiceTest {
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
                 .build();
 
-        PointType pointType = PointType.of(1, 1, 1, 1, 1, 1);
+        PointType pointType = PointType.of(1, 1, true, 1, 1, true, 1, 1, true);
 
         // when
         reviewHistoryService.createReviewHistory(request, pointType);
@@ -75,7 +75,7 @@ public class ReviewHistoryServiceTest {
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
                 .build();
 
-        PointType pointType = PointType.of(1, 1, 1, 1, 1, 1);
+        PointType pointType = PointType.of(1, 1, true, 1, 1, true, 1, 1, true);
 
         // when
         reviewHistoryService.createReviewHistory(request, pointType);
@@ -103,7 +103,7 @@ public class ReviewHistoryServiceTest {
                 .placeId("2e4baf1c-5acb-4efb-a1af-eddada31b00f")
                 .build();
 
-        PointType pointType = PointType.of(1, 1, 1, 1, 1, 1);
+        PointType pointType = PointType.of(1, 1, true, 1, 1, true, 1, 1, true);
 
         // when
         reviewHistoryService.createReviewHistory(request, pointType);
