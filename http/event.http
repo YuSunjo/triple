@@ -30,4 +30,5 @@ Content-Type: application/json
 }
 
 ### point 조회
-GET {{backend_api}}/user/point?userId=3ede0ef2-92b7-4817-a5f3-0c575361f745
+GET {{backend_api}}/user/point
+Authorization: 3ede0ef2-92b7-4817-a5f3-0c575361f745
