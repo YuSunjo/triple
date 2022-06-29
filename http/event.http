@@ -30,5 +30,6 @@ Content-Type: application/json
 }
 
 ### point 조회
+### Authorization이 없으면 예외 발생
 GET {{backend_api}}/user/point
 Authorization: 3ede0ef2-92b7-4817-a5f3-0c575361f745
