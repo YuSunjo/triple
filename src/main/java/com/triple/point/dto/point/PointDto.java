@@ -3,7 +3,6 @@ package com.triple.point.dto.point;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-// TODO: 2022/06/28 이름 고민좀~
 @Getter
 @NoArgsConstructor
 public class PointDto {
