@@ -32,6 +32,7 @@ public class ReviewPointService {
     private final ReviewRepository reviewRepository;
     private final ReviewHistoryRepository reviewHistoryRepository;
 
+    // TODO: 2022/07/08 이런 부분도 interface로 하는게 더 좋으려나?
     @Transactional
     public PointType managePoint(ReviewEventRequest request) {
         if (request.isAdd()) {
